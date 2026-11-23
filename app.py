@@ -225,8 +225,8 @@ with tab1:
                         "Vendos celesin API Gemini ne menune anesore per te aktivizuar raportet AI."
                     )
                 else:
-                with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
-                try:
+                    with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
+                        try:
                             news_items = yf.Ticker(selected_ticker).news[:5]
                             headlines = "\n".join([
                                 f"- {n.get('content', {}).get('title', n.get('title', ''))}"
