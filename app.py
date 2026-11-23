@@ -137,92 +137,92 @@ tab1, tab2 = st.tabs(["Terminali i Tregut & AI", "Portofoli & Fitimi/Humbja"])
 # SEKSIONI 1: TREGU NE KOHE REALE & ANALISTI AI
 # ==========================================
 with tab1:
-    st.subheader("Pulsi i Tregut ne Kohe Reale")
-    if tickers:
-        for i in range(0, len(tickers), 5):
-            row_tickers = tickers[i : i + 5]
-            cols = st.columns(len(row_tickers))
-            for idx, ticker in enumerate(row_tickers):
-                try:
-                    stock = yf.Ticker(ticker)
-                    hist = stock.history(period="5d")
-                    if len(hist) >= 2:
-                        current = hist["Close"].iloc[-1]
-                        prev = hist["Close"].iloc[-2]
-                        change_pct = ((current - prev) / prev) * 100
-                        currency = (
-                            "EUR "
-                            if ticker.endswith((".DE", ".AS", ".PA"))
-                            else ("GBP " if ticker.endswith(".L") else "$")
-                        )
-                        cols[idx].metric(
-                            label=ticker,
-                            value=f"{currency}{current:,.2f}",
-                            delta=f"{change_pct:+.2f}%",
-                        )
-                    else:
-                        cols[idx].metric(label=ticker, value="N/A")
-                except Exception:
-                    cols[idx].metric(label=ticker, value="Gabim")
-    else:
-        st.info(
-            "Zgjidh te pakten nje ETF ose shkruaj nje aksion ne menune anesore."
-        )
+st.subheader("Pulsi i Tregut ne Kohe Reale")
+if tickers:
+for i in range(0, len(tickers), 5):
+row_tickers = tickers[i : i + 5]
+cols = st.columns(len(row_tickers))
+for idx, ticker in enumerate(row_tickers):
+try:
+stock = yf.Ticker(ticker)
+hist = stock.history(period="5d")
+if len(hist) >= 2:
+current = hist["Close"].iloc[-1]
+prev = hist["Close"].iloc[-2]
+change_pct = ((current - prev) / prev) * 100
+currency = (
+"EUR "
+if ticker.endswith((".DE", ".AS", ".PA"))
+else ("GBP " if ticker.endswith(".L") else "$")
+)
+cols[idx].metric(
+label=ticker,
+value=f"{currency}{current:,.2f}",
+delta=f"{change_pct:+.2f}%",
+)
+else:
+cols[idx].metric(label=ticker, value="N/A")
+except Exception:
+cols[idx].metric(label=ticker, value="Gabim")
+else:
+st.info(
+"Zgjidh te pakten nje ETF ose shkruaj nje aksion ne menune anesore."
+)
 
-    st.divider()
+st.divider()
 
-    if tickers:
-        col_chart, col_ai = st.columns([1.6, 1])
+if tickers:
+col_chart, col_ai = st.columns([1.6, 1])
 
-        with col_chart:
-            selected_ticker = st.selectbox(
-                "Zgjidh Asetin per Analize",
-                tickers,
-                format_func=lambda x: f"{x} - {ETF_CATALOG.get(x, 'Aksion')}",
-            )
-            df = yf.Ticker(selected_ticker).history(period=timeframe)
+with col_chart:
+selected_ticker = st.selectbox(
+"Zgjidh Asetin per Analize",
+tickers,
+format_func=lambda x: f"{x} - {ETF_CATALOG.get(x, 'Aksion')}",
+)
+df = yf.Ticker(selected_ticker).history(period=timeframe)
 
-            if not df.empty:
-                df["SMA20"] = df["Close"].rolling(window=20).mean()
-                fig = go.Figure()
-                fig.add_trace(
-                    go.Candlestick(
-                        x=df.index,
-                        open=df["Open"],
-                        high=df["High"],
-                        low=df["Low"],
-                        close=df["Close"],
-                        name="Cmimi",
-                    )
-                )
-                fig.add_trace(
-                    go.Scatter(
-                        x=df.index,
-                        y=df["SMA20"],
-                        line=dict(color="#f0b90b", width=1.5),
-                        name="Mesatarja Levizese 20-Ditore",
-                    )
-                )
-                fig.update_layout(
-                    template="plotly_dark",
-                    paper_bgcolor="#0b0e14",
-                    plot_bgcolor="#161b22",
-                    xaxis_rangeslider_visible=False,
-                    height=450,
-                    margin=dict(l=10, r=10, t=30, b=10),
-                )
-                st.plotly_chart(fig, use_container_width=True)
+if not df.empty:
+df["SMA20"] = df["Close"].rolling(window=20).mean()
+fig = go.Figure()
+fig.add_trace(
+go.Candlestick(
+x=df.index,
+open=df["Open"],
+high=df["High"],
+low=df["Low"],
+close=df["Close"],
+name="Cmimi",
+)
+)
+fig.add_trace(
+go.Scatter(
+x=df.index,
+y=df["SMA20"],
+line=dict(color="#f0b90b", width=1.5),
+name="Mesatarja Levizese 20-Ditore",
+)
+)
+fig.update_layout(
+template="plotly_dark",
+paper_bgcolor="#0b0e14",
+plot_bgcolor="#161b22",
+xaxis_rangeslider_visible=False,
+height=450,
+margin=dict(l=10, r=10, t=30, b=10),
+)
+st.plotly_chart(fig, use_container_width=True)
 
-        with col_ai:
-            st.subheader("Permbledhja Ekzekutive AI")
-            st.write(
-                f"Analiza e shpejte e lajmeve dhe levizjeve per **{selected_ticker}**:"
-            )
-
-            if st.button(f"Gjenero Raportin AI per {selected_ticker}", type="primary"):
-                if not gemini_key:
-                    st.warning(
-                        "Vendos celesin API Gemini ne menune anesore per te aktivizuar raportet AI."
+with col_ai:
+st.subheader("Permbledhja Ekzekutive AI")
+st.write(
+f"Analiza e shpejte e lajmeve dhe levizjeve per **{selected_ticker}**:"
+)
+            
+if st.button(f"Gjenero Raportin AI per {selected_ticker}", type="primary"):
+if not gemini_key:
+st.warning(
+"Vendos celesin API Gemini ne menune anesore per te aktivizuar raportet AI."
 )
 else:
 with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
