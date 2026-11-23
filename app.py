@@ -1,3 +1,4 @@
+import time
 from google import genai
 import pandas as pd
 import plotly.express as px
@@ -243,7 +244,7 @@ with tab1:
                             )
                             response = None
                             last_err = ""
-                            for m in ["gemini-3.8-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"]:
+                            for m in ["gemini-3.8-flash", "gemini-3.8-flash", "gemini-3.8-pro"]:
                                 try:
                                     response = client.models.generate_content(model=m, contents=prompt)
                                     break
