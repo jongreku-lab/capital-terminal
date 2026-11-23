@@ -255,9 +255,8 @@ with tab1:
                         except Exception as e:
                             st.error(f"Nuk u arrit te gjenerohej raporti: {e}")
 
-if response is None:
-    raise RuntimeError("Te gjitha modelet jane te ngarkuara per momentin. Provo perseri pas pak sekondash.")
-
+                            if response is None:
+                              raise RuntimeError("Te gjitha modelet jane te ngarkuara per momentin. Provo perseri pas pak sekondash.")
                             st.success("Raporti eshte gati")
                             st.markdown(response.text)
                         except Exception as e:
