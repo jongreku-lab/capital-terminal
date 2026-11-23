@@ -226,7 +226,7 @@ with tab1:
                     )
                 else:
                                        with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
-                        try:
+                                       try:
                             news_items = yf.Ticker(selected_ticker).news[:5]
                             headlines = "\n".join([
                                 f"- {n.get('content', {}).get('title', n.get('title', ''))}"
