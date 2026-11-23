@@ -242,14 +242,14 @@ with tab1:
                                 " 3) Rreziku qe Duhet Ndjekur. Mbaje te shkurter dhe praktik."
                             )
                             response = None
-last_err = ""
-for m in ["gemini-3.8-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"]:
-    try:
-        response = client.models.generate_content(model=m, contents=prompt)
-        break
-    except Exception as err:
-        last_err = str(err)
-        continue
+                            last_err = ""
+                            for m in ["gemini-3.8-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"]:
+                                try:
+                                    response = client.models.generate_content(model=m, contents=prompt)
+                                    break
+                                except Exception as err:
+                                    last_err = str(err)
+                                    continue
                             if response is None:
                               raise RuntimeError(f"Serveri i AI eshte i ngarkuar ({last_err}). Provo perseri.")
                             st.success("Raporti eshte gati")
