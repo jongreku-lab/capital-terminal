@@ -242,7 +242,7 @@ with tab1:
                                 " 3) Rreziku qe Duhet Ndjekur. Mbaje te shkurter dhe praktik."
                             )
                             response = client.models.generate_content(
-                                model="gemini-2.5-flash", contents=prompt
+                                model="gemini-3.8-flash", contents=prompt
                             )
                             st.success("Raporti eshte gati")
                             st.markdown(response.text)
