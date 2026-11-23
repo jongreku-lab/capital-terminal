@@ -225,7 +225,7 @@ with tab1:
                         "Vendos celesin API Gemini ne menune anesore per te aktivizuar raportet AI."
                     )
                 else:
-                    with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
+                                       with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
                         try:
                             news_items = yf.Ticker(selected_ticker).news[:5]
                             headlines = "\n".join([
@@ -241,13 +241,20 @@ with tab1:
                                 " 1) Faktori Kryesor (Katalizatori), 2) Skenari Pozitiv (Bull Case),"
                                 " 3) Rreziku qe Duhet Ndjekur. Mbaje te shkurter dhe praktik."
                             )
-                           response = None
-for m in ["gemini-3.8-flash", "gemini-3.8-flash-lite", "gemini-3.5-flash"]:
-    try:
-        response = client.models.generate_content(model=m, contents=prompt)
-        break
-    except Exception:
-        continue
+                            response = None
+                            for m in ["gemini-3.8-flash", "gemini-3.8-flash-lite", "gemini-3.5-flash"]:
+                                try:
+                                    response = client.models.generate_content(model=m, contents=prompt)
+                                    break
+                                except Exception:
+                                    continue
+                            if response is None:
+                                raise RuntimeError("Te gjitha modelet jane te ngarkuara per momentin. Provo perseri.")
+                            st.success("Raporti eshte gati")
+                            st.markdown(response.text)
+                        except Exception as e:
+                            st.error(f"Nuk u arrit te gjenerohej raporti: {e}")
+
 if response is None:
     raise RuntimeError("Te gjitha modelet jane te ngarkuara per momentin. Provo perseri pas pak sekondash.")
 
