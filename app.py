@@ -7,7 +7,7 @@ import yfinance as yf
 
 # --- KONFIGURIMI I FAQES ---
 st.set_page_config(
-    page_title="Terminali Privat i Kapitalit i Rigersit", layout="wide"
+    page_title="Terminali Privat i Kapitalit Rigersit", layout="wide"
 )
 
 # Stili i Erret (Dark Wall-Street Theme)
@@ -35,7 +35,6 @@ st.caption(
 
 # --- BIBLIOTEKA ME 60 ETF KRYESORE (US, EUROPIANE, SEKTORIALE, MALLRA) ---
 ETF_CATALOG = {
-    # S&P 500 & Indekset Kryesore US (10)
     "SPY": "SPDR S&P 500 ETF (US)",
     "VOO": "Vanguard S&P 500 ETF (US)",
     "IVV": "iShares Core S&P 500 ETF (US)",
@@ -46,7 +45,6 @@ ETF_CATALOG = {
     "VTI": "Vanguard Total Stock Market (US)",
     "IWM": "iShares Russell 2000 Small-Cap (US)",
     "VT": "Vanguard Total World Stock (Global)",
-    # ETF Europiane & UCITS - S&P 500, EQQQ & Tregu Europian (18)
     "EQQQ.L": "Invesco EQQQ NASDAQ-100 UCITS (London)",
     "EQQQ.DE": "Invesco EQQQ NASDAQ-100 UCITS (Xetra EUR)",
     "CSPX.L": "iShares Core S&P 500 UCITS (London)",
@@ -65,7 +63,6 @@ ETF_CATALOG = {
     "EXS1.DE": "iShares Core DAX UCITS (Xetra Germany)",
     "CAC.PA": "Amundi CAC 40 UCITS (Paris France)",
     "EWG": "iShares MSCI Germany ETF",
-    # Dividende & Vlere (8)
     "SCHD": "Schwab US Dividend Equity ETF",
     "VYM": "Vanguard High Dividend Yield ETF",
     "VIG": "Vanguard Dividend Appreciation ETF",
@@ -74,7 +71,6 @@ ETF_CATALOG = {
     "JEPQ": "JPMorgan Nasdaq Equity Premium Income",
     "VTV": "Vanguard Value ETF",
     "VUG": "Vanguard Growth ETF",
-    # Sektoret Kryesore & Teknologjia (12)
     "XLK": "Technology Select Sector SPDR",
     "SMH": "VanEck Semiconductor ETF",
     "SOXX": "iShares Semiconductor ETF",
@@ -87,12 +83,10 @@ ETF_CATALOG = {
     "XLU": "Utilities Select Sector SPDR",
     "XLRE": "Real Estate Select Sector SPDR",
     "ARKK": "ARK Innovation ETF",
-    # Tregjet Nderkombetare & Ekonomite ne Zhvillim (4)
     "VXUS": "Vanguard Total International Stock",
     "EFA": "iShares MSCI EAFE Developed Markets",
     "EEM": "iShares MSCI Emerging Markets",
     "VWO": "Vanguard FTSE Emerging Markets",
-    # Obligacione, Ar, Mallra & Kripto ETF (8)
     "GLD": "SPDR Gold Shares (Ar)",
     "IAU": "iShares Gold Trust (Ar)",
     "SLV": "iShares Silver Trust (Argjend)",
@@ -143,138 +137,139 @@ tab1, tab2 = st.tabs(["Terminali i Tregut & AI", "Portofoli & Fitimi/Humbja"])
 # SEKSIONI 1: TREGU NE KOHE REALE & ANALISTI AI
 # ==========================================
 with tab1:
-  st.subheader("Pulsi i Tregut ne Kohe Reale")
-  if tickers:
-    for i in range(0, len(tickers), 5):
-      row_tickers = tickers[i : i + 5]
-      cols = st.columns(len(row_tickers))
-      for idx, ticker in enumerate(row_tickers):
-        try:
-          stock = yf.Ticker(ticker)
-          hist = stock.history(period="5d")
-          if len(hist) >= 2:
-            current = hist["Close"].iloc[-1]
-            prev = hist["Close"].iloc[-2]
-            change_pct = ((current - prev) / prev) * 100
-            currency = (
-                "EUR "
-                if ticker.endswith((".DE", ".AS", ".PA"))
-                else ("GBP " if ticker.endswith(".L") else "$")
-            )
-            cols[idx].metric(
-                label=ticker,
-                value=f"{currency}{current:,.2f}",
-                delta=f"{change_pct:+.2f}%",
-            )
-          else:
-            cols[idx].metric(label=ticker, value="N/A")
-        except Exception:
-          cols[idx].metric(label=ticker, value="Gabim")
-  else:
-    st.info(
-        "Zgjidh te pakten nje ETF ose shkruaj nje aksion ne menune anesore."
-    )
-
-  st.divider()
-
-  if tickers:
-    col_chart, col_ai = st.columns([1.6, 1])
-
-    with col_chart:
-      selected_ticker = st.selectbox(
-          "Zgjidh Asetin per Analize",
-          tickers,
-          format_func=lambda x: f"{x} - {ETF_CATALOG.get(x, 'Aksion')}",
-      )
-      df = yf.Ticker(selected_ticker).history(period=timeframe)
-
-      if not df.empty:
-        df["SMA20"] = df["Close"].rolling(window=20).mean()
-        fig = go.Figure()
-        fig.add_trace(
-            go.Candlestick(
-                x=df.index,
-                open=df["Open"],
-                high=df["High"],
-                low=df["Low"],
-                close=df["Close"],
-                name="Cmimi",
-            )
+    st.subheader("Pulsi i Tregut ne Kohe Reale")
+    if tickers:
+        for i in range(0, len(tickers), 5):
+            row_tickers = tickers[i : i + 5]
+            cols = st.columns(len(row_tickers))
+            for idx, ticker in enumerate(row_tickers):
+                try:
+                    stock = yf.Ticker(ticker)
+                    hist = stock.history(period="5d")
+                    if len(hist) >= 2:
+                        current = hist["Close"].iloc[-1]
+                        prev = hist["Close"].iloc[-2]
+                        change_pct = ((current - prev) / prev) * 100
+                        currency = (
+                            "EUR "
+                            if ticker.endswith((".DE", ".AS", ".PA"))
+                            else ("GBP " if ticker.endswith(".L") else "$")
+                        )
+                        cols[idx].metric(
+                            label=ticker,
+                            value=f"{currency}{current:,.2f}",
+                            delta=f"{change_pct:+.2f}%",
+                        )
+                    else:
+                        cols[idx].metric(label=ticker, value="N/A")
+                except Exception:
+                    cols[idx].metric(label=ticker, value="Gabim")
+    else:
+        st.info(
+            "Zgjidh te pakten nje ETF ose shkruaj nje aksion ne menune anesore."
         )
-        fig.add_trace(
-            go.Scatter(
-                x=df.index,
-                y=df["SMA20"],
-                line=dict(color="#f0b90b", width=1.5),
-                name="Mesatarja Levizese 20-Ditore",
+
+    st.divider()
+
+    if tickers:
+        col_chart, col_ai = st.columns([1.6, 1])
+
+        with col_chart:
+            selected_ticker = st.selectbox(
+                "Zgjidh Asetin per Analize",
+                tickers,
+                format_func=lambda x: f"{x} - {ETF_CATALOG.get(x, 'Aksion')}",
             )
-        )
-        fig.update_layout(
-            template="plotly_dark",
-            paper_bgcolor="#0b0e14",
-            plot_bgcolor="#161b22",
-            xaxis_rangeslider_visible=False,
-            height=450,
-            margin=dict(l=10, r=10, t=30, b=10),
-        )
-        st.plotly_chart(fig, use_container_width=True)
+            df = yf.Ticker(selected_ticker).history(period=timeframe)
 
-    with col_ai:
-      st.subheader("Permbledhja Ekzekutive AI")
-      st.write(
-          f"Analiza e shpejte e lajmeve dhe levizjeve per **{selected_ticker}**:"
-      )
+            if not df.empty:
+                df["SMA20"] = df["Close"].rolling(window=20).mean()
+                fig = go.Figure()
+                fig.add_trace(
+                    go.Candlestick(
+                        x=df.index,
+                        open=df["Open"],
+                        high=df["High"],
+                        low=df["Low"],
+                        close=df["Close"],
+                        name="Cmimi",
+                    )
+                )
+                fig.add_trace(
+                    go.Scatter(
+                        x=df.index,
+                        y=df["SMA20"],
+                        line=dict(color="#f0b90b", width=1.5),
+                        name="Mesatarja Levizese 20-Ditore",
+                    )
+                )
+                fig.update_layout(
+                    template="plotly_dark",
+                    paper_bgcolor="#0b0e14",
+                    plot_bgcolor="#161b22",
+                    xaxis_rangeslider_visible=False,
+                    height=450,
+                    margin=dict(l=10, r=10, t=30, b=10),
+                )
+                st.plotly_chart(fig, use_container_width=True)
 
-      if st.button(f"Gjenero Raportin AI per {selected_ticker}", type="primary"):
-        if not gemini_key:
-          st.warning(
-              "Vendos celesin API Gemini ne menune anesore per te aktivizuar"
-              " raportet AI."
-          )
-        else:
-          with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
-            try:
-              news_items = yf.Ticker(selected_ticker).news[:5]
-              headlines = "\n".join([
-                  f"- {n.get('content', {}).get('title', n.get('title', ''))}"
-                  for n in news_items
-              ])
-              client = genai.Client(api_key=gemini_key)
-              prompt = (
-                  "Ti je nje analist i larte financiar i Wall Street qe"
-                  " informon nje investitor privat per"
-                  f" {selected_ticker} ({ETF_CATALOG.get(selected_ticker, '')})."
-                  f" Bazuar ne keto tituj lajmesh te fundit:\n{headlines}\n\n"
-                  "Jep nje permbledhje ekzekutive te qarte ne shqip me 3 pika"
-                  " kryesore: 1) Faktori Kryesor (Katalizatori), 2) Skenari"
-                  " Pozitiv (Bull Case), 3) Rreziku qe Duhet Ndjekur. Mbaje te"
-                  " shkurter dhe praktik."
-              )
-              response = client.models.generate_content(
-                  model="gemini-2.5-flash", contents=prompt
-              )
-              st.success("Raporti eshte gati")
-              st.markdown(response.text)
-            except Exception as e:
-              st.error(f"Nuk u arrit te gjenerohej raporti: {e}")
+        with col_ai:
+            st.subheader("Permbledhja Ekzekutive AI")
+            st.write(
+                f"Analiza e shpejte e lajmeve dhe levizjeve per **{selected_ticker}**:"
+            )
 
-      st.markdown("**Lajmet e Fundit**")
-      try:
-        for item in yf.Ticker(selected_ticker).news[:4]:
-          title = item.get("content", {}).get("title", item.get("title", ""))
-          if title:
-            st.caption(f"- {title}")
-      except Exception:
-        st.caption("Nuk u gjeten lajme te fundit.")
+            if st.button(f"Gjenero Raportin AI per {selected_ticker}", type="primary"):
+                if not gemini_key:
+                    st.warning(
+                        "Vendos celesin API Gemini ne menune anesore per te aktivizuar raportet AI."
+                    )
+                else:
+                    with st.spinner("Duke analizuar te dhenat e tregut dhe lajmet..."):
+                        try:
+                            news_items = yf.Ticker(selected_ticker).news[:5]
+                            headlines = "\n".join([
+                                f"- {n.get('content', {}).get('title', n.get('title', ''))}"
+                                for n in news_items
+                            ])
+                            client = genai.Client(api_key=gemini_key)
+                            prompt = (
+                                "Ti je nje analist i larte financiar i Wall Street qe informon nje investitor privat per"
+                                f" {selected_ticker} ({ETF_CATALOG.get(selected_ticker, '')})."
+                                f" Bazuar ne keto tituj lajmesh te fundit:\n{headlines}\n\n"
+                                "Jep nje permbledhje ekzekutive te qarte ne shqip me 3 pika kryesore:"
+                                " 1) Faktori Kryesor (Katalizatori), 2) Skenari Pozitiv (Bull Case),"
+                                " 3) Rreziku qe Duhet Ndjekur. Mbaje te shkurter dhe praktik."
+                            )
+                            response = client.models.generate_content(
+                                model="gemini-2.5-flash", contents=prompt
+                            )
+                            st.success("Raporti eshte gati")
+                            st.markdown(response.text)
+                        except Exception as e:
+                            st.error(f"Nuk u arrit te gjenerohej raporti: {e}")
 
-# ==========================================
-# SEKSIONI 2: LLOGARITESI I PORTOFOLIT & FITIMIT
-# ==========================================
+            st.markdown("**Lajmet e Fundit**")
+try:
+for item in yf.Ticker(selected_ticker).news[:4]:
+title = item.get("content", {}).get("title", item.get("title", ""))
+if title:
+st.caption(f"- {title}")
+except Exception:
+st.caption("Nuk u gjeten lajme te fundit.")
+
+==========================================
+
+
+SEKSIONI 2: LLOGARITESI I PORTOFOLIT & FITIMIT
+
+
+==========================================
+
 with tab2:
-  st.subheader("Menaxhimi Interaktiv i Portofolit")
-  st.caption(
-      "Ndrysho tabelen me poshte me sasine e aksioneve ose ETF-ve (p.sh. SPY,"
-" EQQQ.L, VWCE.DE) dhe cmimin mesatar te blerjes."
+st.subheader("Menaxhimi Interaktiv i Portofolit")
+st.caption(
+"Ndrysho tabelen me poshte me sasine e aksioneve ose ETF-ve (p.sh. SPY, EQQQ.L, VWCE.DE) dhe cmimin mesatar te blerjes."
 )
 if "portfolio_df" not in st.session_state:
 st.session_state.portfolio_df = pd.DataFrame({
