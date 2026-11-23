@@ -232,24 +232,24 @@ with tab1:
                                 f"- {n.get('content', {}).get('title', n.get('title', ''))}"
                                 for n in news_items
                             ])
-                            client = genai.Client(api_key=gemini_key)
-                            prompt = (
-                                "Ti je nje analist i larte financiar i Wall Street qe informon nje investitor privat per"
-                                f" {selected_ticker} ({ETF_CATALOG.get(selected_ticker, '')})."
-                                f" Bazuar ne keto tituj lajmesh te fundit:\n{headlines}\n\n"
-                                "Jep nje permbledhje ekzekutive te qarte ne shqip me 3 pika kryesore:"
-                                " 1) Faktori Kryesor (Katalizatori), 2) Skenari Pozitiv (Bull Case),"
-                                " 3) Rreziku qe Duhet Ndjekur. Mbaje te shkurter dhe praktik."
-                            )
-                            response = client.models.generate_content(
-                                model="gemini-2.5-flash", contents=prompt
-                            )
-                            st.success("Raporti eshte gati")
-                            st.markdown(response.text)
-                        except Exception as e:
-                            st.error(f"Nuk u arrit te gjenerohej raporti: {e}")
+client = genai.Client(api_key=gemini_key)
+prompt = (
+"Ti je nje analist i larte financiar i Wall Street qe informon nje investitor privat per"
+f" {selected_ticker} ({ETF_CATALOG.get(selected_ticker, '')})."
+f" Bazuar ne keto tituj lajmesh te fundit:\n{headlines}\n\n"
+"Jep nje permbledhje ekzekutive te qarte ne shqip me 3 pika kryesore:"
+" 1) Faktori Kryesor (Katalizatori), 2) Skenari Pozitiv (Bull Case),"
+" 3) Rreziku qe Duhet Ndjekur. Mbaje te shkurter dhe praktik."
+)
+response = client.models.generate_content(
+model="gemini-2.5-flash", contents=prompt
+)
+st.success("Raporti eshte gati")
+st.markdown(response.text)
+except Exception as e:
+st.error(f"Nuk u arrit te gjenerohej raporti: {e}")
 
-            st.markdown("**Lajmet e Fundit**")
+st.markdown("**Lajmet e Fundit**")
 try:
 for item in yf.Ticker(selected_ticker).news[:4]:
 title = item.get("content", {}).get("title", item.get("title", ""))
